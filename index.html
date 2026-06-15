@@ -213,7 +213,7 @@
                         <h2 class="text-lg font-bold flex items-center gap-2 text-slate-800 dark:text-slate-200">
                             <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i> Get the Toy Box!
                         </h2>
-                        <span class="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">SAFE SOURCE</span>
+                        <span class="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">DIRECT JAR</span>
                     </div>
 
                     <!-- OS Detection Banner (Playful Card) -->
@@ -230,7 +230,7 @@
                             </div>
                         </div>
                         <button onclick="triggerDownload()" class="bg-amber-400 hover:bg-amber-500 active:scale-95 text-slate-950 font-bold px-5 py-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-sm">
-                            Get Play Package 🚀
+                            Direct Download JAR 🚀
                         </button>
                     </div>
 
@@ -246,15 +246,15 @@
                                 <div>
                                     <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                                         Universal Java Block (.jar)
-                                        <span class="text-[9px] bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-400 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Works Best! 🌟</span>
+                                        <span class="text-[9px] bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-400 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Direct Download 🌟</span>
                                     </h3>
                                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Runs on all computers. Just needs the standard Java launcher installed!</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4">
-                                <span class="text-xs font-mono text-slate-400 dark:text-slate-500 whitespace-nowrap">Official Source</span>
+                                <span class="text-xs font-mono text-slate-400 dark:text-slate-500 whitespace-nowrap" id="latest-jar-label">Searching...</span>
                                 <button onclick="simulateDownload('Universal JAR')" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
-                                    <i data-lucide="download" class="w-4 h-4"></i> Download JAR
+                                    <i data-lucide="download" class="w-4 h-4"></i> Get JAR Now
                                 </button>
                             </div>
                         </div>
@@ -440,7 +440,7 @@
                     </div>
                 </div>
 
-                <!-- ENTERTAINMENT SANDBOX: Speedy Block Popper (Rebranded and colorful) -->
+                <!-- ENTERTAINMENT SANDBOX: Speedy Block Popper -->
                 <div class="bg-white dark:bg-[#11162d]/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
                     <h3 class="text-sm font-bold flex items-center gap-2 mb-1.5 text-slate-800 dark:text-slate-200">
                         <i data-lucide="gamepad-2" class="w-4 h-4 text-emerald-500"></i> Timmi's Speedy Block Popper!
@@ -557,6 +557,9 @@
         // Initialize Lucide icons
         lucide.createIcons();
 
+        // Target .jar Download Storage
+        let resolvedJarDownloadUrl = null;
+
         // 1. Light/Dark Theme Switch Controller (Persistent LocalStorage)
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -634,30 +637,36 @@
             targetName.innerText = `Preparing safe path for ${packageName}...`;
             progressBar.style.width = '0%';
             percentageText.innerText = '0%';
-            bytesText.innerText = 'Tuning into GitHub Releases chest...';
+            bytesText.innerText = 'Contacting GitHub payload repository...';
             
-            writeToTerminal(`[DOWNLOAD] Opening the magical link to ashvik-cs50/TimmiLand...`);
+            writeToTerminal(`[DOWNLOAD] Opening the magical path to ashvik-cs50/TimmiLand...`);
 
             let progress = 0;
             const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 8;
+                progress += Math.floor(Math.random() * 15) + 12;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
                     progressBar.style.width = `100%`;
                     percentageText.innerText = `100%`;
-                    bytesText.innerText = 'Handshake done! Opening target sandbox...';
-                    writeToTerminal(`[DOWNLOAD] All checked! Opening GitHub Releases page...`);
+                    bytesText.innerText = 'Handshake done! Launching direct download...';
+                    writeToTerminal(`[DOWNLOAD] Link approved! Starting your .jar download!`);
                     
                     setTimeout(() => {
-                        window.open("https://github.com/ashvik-cs50/TimmiLand/releases", "_blank");
-                    }, 800);
+                        // If we resolved the JAR URL dynamically, redirect directly to download it
+                        if (resolvedJarDownloadUrl) {
+                            window.location.href = resolvedJarDownloadUrl;
+                        } else {
+                            // Fallback to releases page if the asset fetch failed or is still resolving
+                            window.open("https://github.com/ashvik-cs50/TimmiLand/releases", "_blank");
+                        }
+                    }, 600);
                 } else {
                     progressBar.style.width = `${progress}%`;
                     percentageText.innerText = `${progress}%`;
-                    bytesText.innerText = `Grabbing puzzle blocks... ${progress}%`;
+                    bytesText.innerText = `Fetching block files... ${progress}%`;
                 }
-            }, 120);
+            }, 100);
         }
 
         // 4. Interactive Terminal Commands
@@ -807,10 +816,11 @@
             reflexEmoji.innerText = "🎁";
         }
 
-        // 7. Dynamic GitHub Releases Fetcher Engine
+        // 7. Dynamic GitHub Releases Fetcher & Direct Link Resolver Engine
         async function fetchGitHubUpdates() {
             const releasesGrid = document.getElementById('releases-display-grid');
             const apiStatusLabel = document.getElementById('api-status-label');
+            const latestJarLabel = document.getElementById('latest-jar-label');
             const repoOwner = 'ashvik-cs50';
             const repoName = 'TimmiLand';
             
@@ -827,7 +837,27 @@
                 
                 if (!releases || releases.length === 0) {
                     writeToTerminal('[SYSTEM] No online logs found. Using cached notes.');
+                    latestJarLabel.innerText = "Go to Releases Page";
                     return;
+                }
+
+                // Try to resolve the actual direct JAR download URL dynamically from the latest release asset
+                const latestRelease = releases[0];
+                if (latestRelease.assets && latestRelease.assets.length > 0) {
+                    const jarAsset = latestRelease.assets.find(asset => asset.name.toLowerCase().endsWith('.jar'));
+                    if (jarAsset) {
+                        resolvedJarDownloadUrl = jarAsset.browser_download_url;
+                        const sizeMB = (jarAsset.size / (1024 * 1024)).toFixed(1);
+                        latestJarLabel.innerText = `Direct Link (${sizeMB} MB)`;
+                        writeToTerminal(`[SYSTEM] Direct download mapped successfully to: ${jarAsset.name}`);
+                    } else {
+                        // Fallback directly to the overall release page if no JAR asset exists in the latest build
+                        resolvedJarDownloadUrl = "https://github.com/ashvik-cs50/TimmiLand/releases";
+                        latestJarLabel.innerText = "Go to Release Hub";
+                    }
+                } else {
+                    resolvedJarDownloadUrl = "https://github.com/ashvik-cs50/TimmiLand/releases";
+                    latestJarLabel.innerText = "Go to Release Hub";
                 }
 
                 let htmlContent = '';
@@ -897,6 +927,8 @@
                 console.error(error);
                 apiStatusLabel.innerText = "Offline Safety Logs";
                 apiStatusLabel.className = "text-xs font-mono font-bold text-amber-600 dark:text-amber-500";
+                latestJarLabel.innerText = "Check Releases";
+                resolvedJarDownloadUrl = "https://github.com/ashvik-cs50/TimmiLand/releases";
                 writeToTerminal('[SYSTEM ERROR] Couldn\'t reach the live toy chest. Using backup cached note folders.');
             }
         }
