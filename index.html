@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimmiLand - Early Alpha Playground!</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Configuration for Playful Theme -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fef9c3',
+                            100: '#fef08a',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            900: '#713f12',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap');
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .mono {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Clean Flat Playful Grid Background */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+        }
+        .dark .bg-grid-pattern {
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+
+        /* Cheerful Playground Construction Tape */
+        .hazard-tape {
+            background: repeating-linear-gradient(
+                -45deg,
+                #f59e0b,
+                #f59e0b 20px,
+                #475569 20px,
+                #475569 40px
+            );
+            position: relative;
+            border-bottom: 4px solid #ca8a04;
+        }
+
+        .hazard-text-container {
+            display: flex;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .hazard-scroll {
+            display: inline-block;
+            animation: scroll-hazard 25s linear infinite;
+            color: #ffffff;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            letter-spacing: 0.12em;
+            text-shadow: 2px 2px 0px #1e293b;
+            padding: 10px 0;
+        }
+
+        @keyframes scroll-hazard {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        /* Diagonal stripes overlay for baking/locked cards */
+        .locked-tape-overlay {
+            background: repeating-linear-gradient(
+                -45deg,
+                rgba(245, 158, 11, 0.12),
+                rgba(245, 158, 11, 0.12) 12px,
+                transparent 12px,
+                transparent 24px
+            );
+        }
+
+        /* Diagonal stripes overlay for wobbly versions */
+        .buggy-tape-overlay {
+            background: repeating-linear-gradient(
+                -45deg,
+                rgba(239, 68, 68, 0.06),
+                rgba(239, 68, 68, 0.06) 12px,
+                transparent 12px,
+                transparent 24px
+            );
+        }
+
+        /* Soft Bounce animation for toy vibes */
+        @keyframes gentle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .bounce-hover:hover {
+            animation: gentle-bounce 0.6s infinite ease-in-out;
+        }
+
+        /* Screen Glitch Animation */
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+        .glitching {
+            animation: glitch 0.2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-amber-50/30 text-slate-800 dark:bg-[#0c1020] dark:text-slate-100 min-h-screen flex flex-col justify-between transition-colors duration-200">
+
+    <!-- Subtle Graphic grid pattern backdrop -->
+    <div class="fixed inset-0 bg-grid-pattern pointer-events-none z-0"></div>
+
+    <!-- TOP WARNING BANNER (Playground Construction Style) -->
+    <div class="hazard-tape w-full z-40 relative">
+        <div class="hazard-text-container">
+            <div class="hazard-scroll">
+                🎁 TIMMILAND IS IN EARLY CREATION MODE • WORK IN PROGRESS (W.I.P) • FUN UPDATES ON THE WAY • CURRENT SNEAK PEEK: v0.4.2-ALPHA • 🎁 TIMMILAND IS IN EARLY CREATION MODE • WORK IN PROGRESS (W.I.P) • FUN UPDATES ON THE WAY • CURRENT SNEAK PEEK: v0.4.2-ALPHA •
+            </div>
+            <div class="hazard-scroll" aria-hidden="true">
+                🎁 TIMMILAND IS IN EARLY CREATION MODE • WORK IN PROGRESS (W.I.P) • FUN UPDATES ON THE WAY • CURRENT SNEAK PEEK: v0.4.2-ALPHA • 🎁 TIMMILAND IS IN EARLY CREATION MODE • WORK IN PROGRESS (W.I.P) • FUN UPDATES ON THE WAY • CURRENT SNEAK PEEK: v0.4.2-ALPHA •
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN HEADER NAVIGATION -->
+    <nav class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#0c1020]/80 backdrop-blur-md z-30 relative py-4">
+        <div class="container mx-auto px-6 max-w-7xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="font-bold tracking-tight text-xl flex items-center gap-2">
+                    🎮 TimmiLand <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 font-bold uppercase tracking-wider">Playground</span>
+                </span>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <a href="https://github.com/ashvik-cs50/TimmiLand/releases" target="_blank" class="hidden sm:flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors font-medium">
+                    <i data-lucide="github" class="w-4 h-4"></i> GitHub Release Hub
+                </a>
+                <span class="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></span>
+                
+                <!-- COZY LIGHT / DARK THEME TOGGLE -->
+                <button onclick="toggleTheme()" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 transition-all flex items-center justify-center shadow-sm" aria-label="Toggle Theme">
+                    <i id="theme-toggle-icon" data-lucide="moon" class="w-4.5 h-4.5"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN PORTAL CONTAINER -->
+    <main class="container mx-auto px-6 py-12 max-w-7xl flex-grow flex flex-col justify-center z-10 relative">
+        
+        <!-- Header Section with Logo and Cozy Badges -->
+        <header class="text-center mb-14">
+            <div class="flex justify-center items-center gap-2 mb-8 flex-wrap">
+                <span class="bg-amber-100 dark:bg-amber-500/10 border border-amber-300 dark:border-amber-500/30 text-amber-800 dark:text-amber-400 px-4 py-1.5 rounded-full text-xs font-bold uppercase flex items-center gap-1.5 shadow-sm">
+                    🛠️ Early Building Phase
+                </span>
+                <span class="bg-blue-100 dark:bg-blue-500/10 border border-blue-300 dark:border-blue-500/30 text-blue-800 dark:text-blue-400 px-4 py-1.5 rounded-full text-xs font-bold uppercase flex items-center gap-1.5 shadow-sm">
+                    ☕ Pure Java Fun!
+                </span>
+                <span class="bg-emerald-100 dark:bg-emerald-500/10 border border-emerald-300 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-400 px-4 py-1.5 rounded-full text-xs font-bold uppercase flex items-center gap-1.5 shadow-sm">
+                    🚀 v0.4.2-ALPHA
+                </span>
+            </div>
+
+            <!-- Game Logo image with smooth scale and clean containment -->
+            <div class="relative inline-block mb-6 bounce-hover transition-transform duration-300">
+                <img src="image-1.png" alt="TimmiLand Logo" 
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x110/f59e0b/ffffff?text=TimmiLand+Voxel+Alpha'"
+                     class="max-h-24 sm:max-h-32 mx-auto object-contain drop-shadow-md">
+            </div>
+
+            <p class="text-slate-600 dark:text-slate-400 text-lg sm:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
+                Welcome to the playground! Build amazing things block by block in a world made out of magical voxel shapes!
+            </p>
+        </header>
+
+        <!-- Dynamic Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- LEFT COLUMN: Download Hub & OS detection (7 cols) -->
+            <div class="lg:col-span-7 space-y-8">
+                
+                <!-- Main Download Station Card -->
+                <div class="bg-white dark:bg-[#11162d]/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-lg font-bold flex items-center gap-2 text-slate-800 dark:text-slate-200">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i> Get the Toy Box!
+                        </h2>
+                        <span class="text-xs font-mono font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded">SAFE SOURCE</span>
+                    </div>
+
+                    <!-- OS Detection Banner (Playful Card) -->
+                    <div id="detected-os-card" class="bg-amber-50/50 dark:bg-slate-950 border-2 border-amber-200 dark:border-amber-900/30 rounded-2xl p-5 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-amber-500 rounded-xl shadow-sm" id="os-icon-box">
+                                <i data-lucide="smile" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Your Device Found!</div>
+                                <div class="text-base font-bold text-slate-800 dark:text-slate-200" id="detected-os-text">
+                                    Ready to Play!
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="triggerDownload()" class="bg-amber-400 hover:bg-amber-500 active:scale-95 text-slate-950 font-bold px-5 py-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-sm">
+                            Get Play Package 🚀
+                        </button>
+                    </div>
+
+                    <!-- Main Download Action Grid -->
+                    <div class="space-y-4">
+                        
+                        <!-- RECOMMENDED JAR DOWNLOAD (ACTIVE) -->
+                        <div class="border-2 border-emerald-100 dark:border-emerald-950/40 bg-emerald-50/10 dark:bg-slate-950/40 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden group transition-all">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-mono font-bold text-sm border border-emerald-200 dark:border-emerald-900/50 shadow-sm">
+                                    JAR
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                                        Universal Java Block (.jar)
+                                        <span class="text-[9px] bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-400 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Works Best! 🌟</span>
+                                    </h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Runs on all computers. Just needs the standard Java launcher installed!</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs font-mono text-slate-400 dark:text-slate-500 whitespace-nowrap">Official Source</span>
+                                <button onclick="simulateDownload('Universal JAR')" class="bg-slate-800 dark:bg-slate-800 hover:bg-slate-900 dark:hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+                                    <i data-lucide="download" class="w-4 h-4"></i> Download JAR
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- WINDOWS EXE (BUGGY SNEAK PEEK) -->
+                        <div class="border-2 border-red-100 dark:border-red-950/30 bg-red-50/5 dark:bg-slate-950/20 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
+                            <div class="absolute inset-0 buggy-tape-overlay opacity-100 pointer-events-none"></div>
+
+                            <div class="flex items-center gap-4 z-10">
+                                <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400 flex items-center justify-center border border-red-200 dark:border-red-900/50 shadow-sm">
+                                    <i data-lucide="frown" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                                        Wobbly Windows Launcher (.exe)
+                                        <span class="text-[9px] bg-red-100 dark:bg-red-500/10 text-red-800 dark:text-red-400 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1">
+                                            ⚠️ Very Buggy!
+                                        </span>
+                                    </h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">This one eats too many computer cookies and might suddenly shut down!</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 z-10">
+                                <button onclick="simulateDownload('Buggy Windows EXE')" class="bg-red-100 dark:bg-red-950/50 border border-red-300 dark:border-red-800 hover:bg-red-200 dark:hover:bg-red-900 text-red-800 dark:text-red-200 px-4 py-2.5 rounded-xl text-xs font-bold transition-all active:scale-95">
+                                    Try Anyway
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- MACOS BUNDLE (LOCKED / STILL IN THE OVEN) -->
+                        <div class="border-2 border-slate-100 dark:border-slate-900 bg-slate-50/50 dark:bg-slate-950/10 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
+                            <div class="absolute inset-0 locked-tape-overlay opacity-100 pointer-events-none"></div>
+
+                            <div class="flex items-center gap-4 opacity-40 select-none">
+                                <div class="w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-900 text-slate-400 flex items-center justify-center border border-slate-300 dark:border-slate-800">
+                                    <i data-lucide="cookie" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 dark:text-slate-400 flex items-center gap-2">
+                                        Mac Apple Launcher Package
+                                    </h3>
+                                    <p class="text-xs text-slate-500">Still cooking! Our chefs are preparing this flavor for next time.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <button class="bg-slate-200 dark:bg-slate-800 text-slate-400 px-4 py-2.5 rounded-xl text-xs font-bold cursor-not-allowed border border-transparent" disabled>
+                                    Coming Soon 🍩
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Interactive Download Progress Block -->
+                    <div id="download-progress-container" class="hidden mt-8 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-900 rounded-2xl p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
+                                <span class="animate-spin h-3.5 w-3.5 border-2 border-slate-500 dark:border-slate-400 border-t-transparent rounded-full"></span>
+                                <span id="download-target-name">Finding Timmi's Toy Box...</span>
+                            </div>
+                            <span id="download-percentage" class="text-xs font-mono font-bold text-slate-700 dark:text-amber-500">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                            <div id="download-progress-bar" class="bg-amber-400 h-full rounded-full transition-all duration-200" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between mt-2.5 text-[10px] font-mono text-slate-400 dark:text-slate-500">
+                            <span id="bytes-transferred">Opening toy chest...</span>
+                            <span>github.com/ashvik-cs50</span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Features / Security Footer -->
+                    <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-900 flex flex-wrap gap-6 justify-between items-center text-xs text-slate-400 dark:text-slate-500">
+                        <span class="flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Kid-Safe Sandbox Tested</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="heart" class="w-4 h-4 text-red-400"></i> Free of Advertisements</span>
+                    </div>
+                </div>
+
+                <!-- LORE PANEL: Explanations (Friendly "Game Nap" explanation) -->
+                <div class="bg-white dark:bg-[#11162d]/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm relative overflow-hidden">
+                    <h2 class="text-lg font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2 mb-4">
+                        <i data-lucide="help-circle" class="w-5 h-5"></i> What is a "Game Nap" (Reboot)?
+                    </h2>
+                    
+                    <div class="space-y-4 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                        <p>
+                            To make sure the voxel trees, funny cows, and fluffy sheep load as quickly as possible, TimmiLand builds the world right in your computer's high-speed memory lanes!
+                        </p>
+                        <p>
+                            Sometimes, if you build a castle so huge that it goes all the way into the stars, the game engine gets super sleepy and takes a quick **2-second nap** to wipe the dust off! We call this a **Snooze Restart**:
+                        </p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-900 flex items-start gap-3">
+                                <span class="text-amber-500 text-sm">🌳</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 dark:text-slate-200 text-xs">Dusting Off Voxel Blocks</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Cleans up unused block piles so your game doesn't wobble or slow down.</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-900 flex items-start gap-3">
+                                <span class="text-amber-500 text-sm">🐑</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 dark:text-slate-200 text-xs">Sheep Herd Resets</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Makes sure animals and friendly blocks spawn nicely on the screen!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diagnostics Reboot Simulator Button -->
+                    <div class="mt-8 p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-900 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="text-left">
+                            <div class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Funny Reset Simulator</div>
+                            <div class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Click to see what happens when the game takes a quick nap!</div>
+                        </div>
+                        <button onclick="triggerRebootGlitch()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2.5 rounded-lg text-xs tracking-wide uppercase transition-colors">
+                            Take a Nap 😴
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Interactive Terminal & Control Logs (5 cols) -->
+            <div class="lg:col-span-5 space-y-8">
+                
+                <!-- PLAYFUL TERMINAL PANEL -->
+                <div class="bg-slate-950 border border-slate-900 rounded-3xl p-5 shadow-2xl relative overflow-hidden">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-900 mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-400"></span>
+                            <span class="text-[10px] text-slate-400 font-mono ml-2 font-bold uppercase tracking-wider">Timmi's_Toy_Machine</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[9px] font-bold tracking-widest font-mono uppercase">HAPPY BOOT</span>
+                    </div>
+                    
+                    <!-- Scrolling Terminal Screen -->
+                    <div id="console-terminal" class="h-44 overflow-y-auto space-y-1.5 text-xs text-emerald-400 font-mono p-1 scrollbar-thin">
+                        <div>[TIMMILAND] Blowing up giant party balloons...</div>
+                        <div>[TIMMILAND] Planting magic pixel seeds in dirt...</div>
+                        <div>[TIMMILAND] Feeding cookie buffers to the sheep...</div>
+                        <div>[TIMMILAND] All systems happy! Welcome, adventurer!</div>
+                    </div>
+
+                    <!-- User Terminal Action -->
+                    <div class="mt-4 pt-3 border-t border-slate-900 flex items-center justify-between gap-2">
+                        <input type="text" id="console-input" placeholder="Type /cookie, /sheep or command..." class="bg-slate-900 border border-slate-800 focus:border-slate-700 outline-none text-xs text-slate-100 rounded-lg px-3 py-2 flex-grow font-mono">
+                        <button onclick="handleConsoleSubmit()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-lg font-mono transition-colors">Go!</button>
+                    </div>
+                </div>
+
+                <!-- KEYBOARD CONFIGURATION / KEYBINDINGS Reference -->
+                <div class="bg-white dark:bg-[#11162d]/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
+                    <h3 class="text-sm font-bold flex items-center gap-2 mb-4 text-slate-800 dark:text-slate-200">
+                        <i data-lucide="gamepad" class="w-4 h-4 text-slate-400"></i> How to Move Around!
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-xs pb-2.5 border-b border-slate-100 dark:border-slate-900">
+                            <span class="text-slate-500 dark:text-slate-400">Walk around the map</span>
+                            <div class="flex gap-1">
+                                <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-bold">W</kbd>
+                                <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-bold">A</kbd>
+                                <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-bold">S</kbd>
+                                <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-bold">D</kbd>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs pb-2.5 border-b border-slate-100 dark:border-slate-900">
+                            <span class="text-slate-500 dark:text-slate-400">Jump / Fly upwards</span>
+                            <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-bold">SPACEBAR</kbd>
+                        </div>
+                        <div class="flex items-center justify-between text-xs pb-2.5 border-b border-slate-100 dark:border-slate-900">
+                            <span class="text-slate-500 dark:text-slate-400">Emergency Game Nap</span>
+                            <div class="flex gap-1 items-center">
+                                <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-bold">F3</kbd>
+                                <span class="text-slate-400 text-[10px] font-mono">+</span>
+                                <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-bold">R</kbd>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ENTERTAINMENT SANDBOX: Speedy Block Popper (Rebranded and colorful) -->
+                <div class="bg-white dark:bg-[#11162d]/90 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
+                    <h3 class="text-sm font-bold flex items-center gap-2 mb-1.5 text-slate-800 dark:text-slate-200">
+                        <i data-lucide="gamepad-2" class="w-4 h-4 text-emerald-500"></i> Timmi's Speedy Block Popper!
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                        Test your speed before the game launches! Click the block as fast as you can when it turns green!
+                    </p>
+
+                    <!-- React Click Box -->
+                    <div id="reflex-box" onclick="handleReflexClick()" class="h-28 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-900 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-colors duration-150 hover:bg-slate-100/80 dark:hover:bg-slate-900/60 shadow-inner">
+                        <span id="reflex-emoji" class="text-2xl mb-1">🎁</span>
+                        <span id="reflex-text" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tap to Start Ping Test!</span>
+                    </div>
+
+                    <!-- Reflex Stats -->
+                    <div class="flex justify-between items-center mt-3 text-xs text-slate-400 font-mono">
+                        <span>Best Score: <strong id="best-reflex-time" class="text-slate-600 dark:text-slate-300">-- ms</strong></span>
+                        <span id="game-status" class="text-slate-500 uppercase font-bold text-[10px] tracking-wider">Ready</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ALPHA ROADMAP & LORE PROGRESS LOG -->
+        <section class="mt-16 bg-white dark:bg-[#11162d]/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h2 class="text-xl font-bold flex items-center gap-2 text-slate-800 dark:text-slate-200">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i> What's New in TimmiLand?
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">These logs are magically loaded directly from your official GitHub updates!</p>
+                </div>
+                <!-- Dynamic Connection Status label -->
+                <div class="flex items-center gap-2 self-start sm:self-center">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="api-status-label" class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">Connecting to toy chest...</span>
+                </div>
+            </div>
+
+            <!-- Dynamic GitHub Releases Row -->
+            <div id="releases-display-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Fallback/Loading Cards -->
+                <div class="bg-slate-50 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-900 flex flex-col justify-between shadow-sm">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold font-mono text-amber-600 dark:text-amber-500">v0.4.2 (Cached Updates)</span>
+                            <span class="text-[9px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Offline</span>
+                        </div>
+                        <ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2.5 list-disc pl-4 leading-relaxed">
+                            <li>Fixed a bug where funny sheep would float away into space.</li>
+                            <li>Told the buggy Windows block to play nice.</li>
+                            <li>Hooked up our CNAME arrays so the site works perfectly.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-900 text-[10px] text-slate-400 dark:text-slate-500 font-mono">
+                        Build Signature: Active
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-900 flex flex-col justify-between shadow-sm">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold font-mono text-emerald-600 dark:text-emerald-500">v0.4.1 (Cached Updates)</span>
+                            <span class="text-[9px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Offline</span>
+                        </div>
+                        <ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2.5 list-disc pl-4 leading-relaxed">
+                            <li>Rebuilt chunk drawings so tree leaves look super shiny.</li>
+                            <li>Added customized support configurations for game panels.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-900 text-[10px] text-slate-400 dark:text-slate-500 font-mono">
+                        Build Signature: Archived
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-900 flex flex-col justify-between shadow-sm">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold font-mono text-slate-500">v0.5.0 (Concept Updates)</span>
+                            <span class="text-[9px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Planning</span>
+                        </div>
+                        <ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2.5 list-disc pl-4 leading-relaxed">
+                            <li>Growable flower gardens that make music!</li>
+                            <li>Procedural voxel lighting shaders.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-900 text-[10px] text-slate-400 dark:text-slate-500 font-mono">
+                        Status: Coming Soon
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-16 border-t border-slate-200 dark:border-slate-900 bg-white dark:bg-[#0c1020] py-10 text-center text-xs text-slate-400 dark:text-slate-500 z-10 relative">
+        <div class="container mx-auto px-6 max-w-4xl space-y-4">
+            <div class="flex justify-center items-center gap-6 text-slate-600 dark:text-slate-400 flex-wrap font-bold">
+                <a href="#" class="hover:text-amber-500 transition-colors flex items-center gap-1.5"><i data-lucide="bug" class="w-4 h-4"></i> Bug Tracker</a>
+                <a href="https://github.com/ashvik-cs50/TimmiLand/releases" target="_blank" class="hover:text-amber-500 transition-colors flex items-center gap-1.5"><i data-lucide="github" class="w-4 h-4"></i> Repository Releases</a>
+                <a href="#" class="hover:text-amber-500 transition-colors flex items-center gap-1.5"><i data-lucide="help-circle" class="w-4 h-4"></i> Guidebook</a>
+            </div>
+            <p class="max-w-md mx-auto leading-relaxed">TimmiLand is a kid-safe sandbox playground created lovingly with OpenJDK. Have fun playing! 💖</p>
+            <div class="text-[10px] font-mono text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-900 inline-block px-4 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800">
+                PORTAL_ROUTE: timmiland.vikco.qzz.io
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE PORTAL SCRIPTS -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // 1. Light/Dark Theme Switch Controller (Persistent LocalStorage)
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-toggle-icon');
+            
+            if (savedTheme === 'dark') {
+                html.classList.add('dark');
+                themeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                html.classList.remove('dark');
+                themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+        initTheme();
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-toggle-icon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.setAttribute('data-lucide', 'moon');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.setAttribute('data-lucide', 'sun');
+            }
+            lucide.createIcons();
+        }
+
+        // 2. Intelligent OS Detection Layout Change
+        const detectedOSText = document.getElementById('detected-os-text');
+        const osIconBox = document.getElementById('os-icon-box');
+        let currentOS = "Windows";
+
+        function detectOS() {
+            const userAgent = window.navigator.userAgent;
+            if (userAgent.indexOf("Win") !== -1) {
+                currentOS = "Windows";
+                detectedOSText.innerText = "Windows Machine (Wobbly Alpha)";
+                osIconBox.innerHTML = '<i data-lucide="frown" class="w-5 h-5 text-red-500"></i>';
+            } else if (userAgent.indexOf("Mac") !== -1) {
+                currentOS = "macOS";
+                detectedOSText.innerText = "Mac Computer (Waiting for Chefs!)";
+                osIconBox.innerHTML = '<i data-lucide="cookie" class="w-5 h-5 text-slate-400"></i>';
+            } else if (userAgent.indexOf("Linux") !== -1) {
+                currentOS = "Linux";
+                detectedOSText.innerText = "Linux Computer (Ready!)";
+                osIconBox.innerHTML = '<i data-lucide="terminal" class="w-5 h-5 text-amber-500"></i>';
+            } else {
+                currentOS = "Universal";
+                detectedOSText.innerText = "Ready to build!";
+                osIconBox.innerHTML = '<i data-lucide="smile" class="w-5 h-5 text-emerald-500"></i>';
+            }
+            lucide.createIcons();
+        }
+        detectOS();
+
+        // 3. Automated Release Redirection & Progress Simulator
+        function triggerDownload() {
+            simulateDownload("Timmi's Play Box");
+        }
+
+        function simulateDownload(packageName) {
+            const container = document.getElementById('download-progress-container');
+            const targetName = document.getElementById('download-target-name');
+            const progressBar = document.getElementById('download-progress-bar');
+            const percentageText = document.getElementById('download-percentage');
+            const bytesText = document.getElementById('bytes-transferred');
+
+            container.classList.remove('hidden');
+            targetName.innerText = `Preparing safe path for ${packageName}...`;
+            progressBar.style.width = '0%';
+            percentageText.innerText = '0%';
+            bytesText.innerText = 'Tuning into GitHub Releases chest...';
+            
+            writeToTerminal(`[DOWNLOAD] Opening the magical link to ashvik-cs50/TimmiLand...`);
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 8;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    progressBar.style.width = `100%`;
+                    percentageText.innerText = `100%`;
+                    bytesText.innerText = 'Handshake done! Opening target sandbox...';
+                    writeToTerminal(`[DOWNLOAD] All checked! Opening GitHub Releases page...`);
+                    
+                    setTimeout(() => {
+                        window.open("https://github.com/ashvik-cs50/TimmiLand/releases", "_blank");
+                    }, 800);
+                } else {
+                    progressBar.style.width = `${progress}%`;
+                    percentageText.innerText = `${progress}%`;
+                    bytesText.innerText = `Grabbing puzzle blocks... ${progress}%`;
+                }
+            }, 120);
+        }
+
+        // 4. Interactive Terminal Commands
+        const terminal = document.getElementById('console-terminal');
+        const consoleInput = document.getElementById('console-input');
+
+        function writeToTerminal(text) {
+            const div = document.createElement('div');
+            div.innerText = text;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function handleConsoleSubmit() {
+            const value = consoleInput.value.trim();
+            if (!value) return;
+
+            writeToTerminal(`$ ${value}`);
+            consoleInput.value = '';
+
+            setTimeout(() => {
+                switch(value.toLowerCase()) {
+                    case '/help':
+                        writeToTerminal('[TIMMI_BOX] Try typing these fun parameters: /sheep, /cookie, /flower, /reboot, /clear');
+                        break;
+                    case '/sheep':
+                        writeToTerminal('[TIMMI_BOX] 🐑 Baaa! A fluffy white sheep spawned and ate some flowers!');
+                        break;
+                    case '/cookie':
+                        writeToTerminal('[TIMMI_BOX] 🍪 Omnomnom! You fed the game engine a yummy virtual cookie!');
+                        break;
+                    case '/flower':
+                        writeToTerminal('[TIMMI_BOX] 🌸 Spawning cozy purple, pink, and yellow daisies across the grass...');
+                        break;
+                    case '/reboot':
+                        triggerRebootGlitch();
+                        break;
+                    case '/clear':
+                        terminal.innerHTML = '';
+                        writeToTerminal('[TIMMI_BOX] Sweep, sweep! All messages swept away!');
+                        break;
+                    default:
+                        writeToTerminal(`[TIMMI_BOX] Oopsy! That magic code doesn't exist. Type "/help" to see valid ones!`);
+                }
+            }, 100);
+        }
+
+        consoleInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleConsoleSubmit();
+            }
+        });
+
+        // 5. Simulated System Reboot Glitch Event
+        function triggerRebootGlitch() {
+            const body = document.getElementById('body-portal');
+            const originalBg = body.style.backgroundColor;
+            const originalOpacity = body.style.opacity;
+            
+            body.classList.add('glitching');
+            writeToTerminal('[Oopsy-Daisy] Voxel sheep ate too many cookies! System overload!');
+            writeToTerminal('[SYSTEM] TUCKING TIMMILAND SANDBOX IN FOR A QUICK SNOOZE...');
+
+            setTimeout(() => {
+                body.style.opacity = '0.05';
+                body.style.backgroundColor = '#000000';
+            }, 700);
+
+            setTimeout(() => {
+                body.style.opacity = originalOpacity;
+                body.style.backgroundColor = originalBg;
+                body.classList.remove('glitching');
+                
+                terminal.innerHTML = '';
+                writeToTerminal('[SYSTEM] Good morning! TimmiLand is fully awake and ready to play!');
+                writeToTerminal('[SYSTEM] All wobbly blocks cleared out safely.');
+            }, 2400);
+        }
+
+        // 6. Reaction Mini-Game Engine
+        const reflexBox = document.getElementById('reflex-box');
+        const reflexText = document.getElementById('reflex-text');
+        const reflexIcon = document.getElementById('reflex-icon');
+        const bestTimeText = document.getElementById('best-reflex-time');
+        const gameStatusText = document.getElementById('game-status');
+        const reflexEmoji = document.getElementById('reflex-emoji');
+
+        let reflexState = "idle";
+        let timerStart = 0;
+        let timeoutId = null;
+        let bestScore = Infinity;
+
+        function handleReflexClick() {
+            if (reflexState === "idle") {
+                reflexState = "waiting";
+                reflexBox.style.backgroundColor = "#fee2e2"; 
+                reflexBox.style.borderColor = "#f87171";
+                document.documentElement.classList.contains('dark') ? reflexBox.style.backgroundColor = "#7f1d1d" : null;
+                
+                reflexText.innerText = "WAIT FOR THE GREEN BLOCK...";
+                reflexEmoji.innerText = "😴";
+                gameStatusText.innerText = "Get Ready...";
+                gameStatusText.className = "text-red-500 font-bold uppercase";
+
+                const randomDelay = Math.random() * 2000 + 1500;
+                timeoutId = setTimeout(() => {
+                    reflexState = "green";
+                    reflexBox.style.backgroundColor = "#d1fae5"; 
+                    reflexBox.style.borderColor = "#34d399";
+                    document.documentElement.classList.contains('dark') ? reflexBox.style.backgroundColor = "#064e3b" : null;
+                    
+                    reflexText.innerText = "CLICK NOW!!!";
+                    reflexEmoji.innerText = "🟢";
+                    gameStatusText.innerText = "TAP IT!";
+                    gameStatusText.className = "text-emerald-500 font-bold uppercase";
+                    timerStart = Date.now();
+                }, randomDelay);
+
+            } else if (reflexState === "waiting") {
+                clearTimeout(timeoutId);
+                resetReflexWidget();
+                reflexText.innerText = "TOO EARLY! Click to try again.";
+                reflexEmoji.innerText = "❌";
+                gameStatusText.innerText = "Wobbly Desync";
+                gameStatusText.className = "text-red-500 font-bold uppercase";
+
+            } else if (reflexState === "green") {
+                const reactionTime = Date.now() - timerStart;
+                resetReflexWidget();
+                reflexText.innerText = `YOUR SPEED: ${reactionTime}ms! Play again?`;
+                reflexEmoji.innerText = "🏆";
+                gameStatusText.innerText = "Success!";
+                gameStatusText.className = "text-slate-500 font-bold uppercase";
+
+                if (reactionTime < bestScore) {
+                    bestScore = reactionTime;
+                    bestTimeText.innerText = `${bestScore} ms`;
+                    writeToTerminal(`[GAME GAME] New speed record set at: ${bestScore}ms! Super fast!`);
+                }
+            }
+        }
+
+        function resetReflexWidget() {
+            reflexState = "idle";
+            reflexBox.style.backgroundColor = "";
+            reflexBox.style.borderColor = "";
+            reflexEmoji.innerText = "🎁";
+        }
+
+        // 7. Dynamic GitHub Releases Fetcher Engine
+        async function fetchGitHubUpdates() {
+            const releasesGrid = document.getElementById('releases-display-grid');
+            const apiStatusLabel = document.getElementById('api-status-label');
+            const repoOwner = 'ashvik-cs50';
+            const repoName = 'TimmiLand';
+            
+            writeToTerminal('[SYSTEM] Reading GitHub updates folder...');
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/releases`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error Status: ${response.status}`);
+                }
+                
+                const releases = await response.json();
+                
+                if (!releases || releases.length === 0) {
+                    writeToTerminal('[SYSTEM] No online logs found. Using cached notes.');
+                    return;
+                }
+
+                let htmlContent = '';
+                const displayLimit = Math.min(releases.length, 3);
+                
+                for (let i = 0; i < displayLimit; i++) {
+                    const release = releases[i];
+                    const releaseName = release.name || release.tag_name;
+                    const isPrerelease = release.prerelease;
+                    const publishDate = new Date(release.published_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+
+                    let logsHTML = '<p class="text-xs text-slate-400">Timmi has played in this build but left no notes!</p>';
+                    if (release.body) {
+                        const bullets = release.body
+                            .split('\n')
+                            .filter(line => line.trim().startsWith('-') || line.trim().startsWith('*') || line.trim().match(/^\d+\./))
+                            .map(line => `<li>${line.replace(/^[-*\d.]\s*/, '')}</li>`)
+                            .slice(0, 4);
+
+                        if (bullets.length > 0) {
+                            logsHTML = `<ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2 list-disc pl-4 leading-relaxed">${bullets.join('')}</ul>`;
+                        } else {
+                            logsHTML = `<p class="text-xs text-slate-500 dark:text-slate-400 italic leading-relaxed">${release.body.substring(0, 120)}...</p>`;
+                        }
+                    }
+
+                    let badgeColor = 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20';
+                    let badgeLabel = 'Playable';
+                    if (isPrerelease) {
+                        badgeColor = 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-500/20';
+                        badgeLabel = 'Alpha';
+                    }
+
+                    htmlContent += `
+                        <div class="bg-slate-50 dark:bg-[#11162d]/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-900 flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-800 transition-all shadow-sm">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-xs font-bold font-mono text-slate-800 dark:text-amber-500 truncate mr-2 font-bold" title="${releaseName}">📝 ${releaseName}</span>
+                                    <span class="text-[9px] ${badgeColor} border px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">${badgeLabel}</span>
+                                </div>
+                                <div class="mb-4">
+                                    ${logsHTML}
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-900 flex items-center justify-between">
+                                <span class="text-[9px] text-slate-400 dark:text-slate-500 font-mono">Date: ${publishDate}</span>
+                                <a href="${release.html_url}" target="_blank" class="text-slate-600 dark:text-amber-500 hover:text-slate-900 dark:hover:text-amber-400 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1 transition-colors">
+                                    View Source <i data-lucide="external-link" class="w-3 h-3"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                releasesGrid.innerHTML = htmlContent;
+                apiStatusLabel.innerText = "Cozy Updates Live!";
+                apiStatusLabel.className = "text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400";
+                
+                writeToTerminal(`[SYSTEM] Updates loaded! Replaced offline note blocks.`);
+                lucide.createIcons();
+
+            } catch (error) {
+                console.error(error);
+                apiStatusLabel.innerText = "Offline Safety Logs";
+                apiStatusLabel.className = "text-xs font-mono font-bold text-amber-600 dark:text-amber-500";
+                writeToTerminal('[SYSTEM ERROR] Couldn\'t reach the live toy chest. Using backup cached note folders.');
+            }
+        }
+
+        window.addEventListener('load', fetchGitHubUpdates);
+    </script>
+</body>
+</html>
